@@ -16,7 +16,7 @@ public class DBConnection {
 	public static Connection connect() {
        try {
     	   Class.forName("org.sqlite.JDBC");
-    	   String url = "jdbc:sqlite:src/database/Personen.db";
+    	   String url = "jdbc:sqlite:database/Personen.db";
     	   Connection conn = DriverManager.getConnection(url);
     	   //System.out.println("Connection SuccesFul");
     	   JOptionPane.showMessageDialog(null, "Verbindung zur Datenbank hergestellt.");
