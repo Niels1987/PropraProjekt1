@@ -1,0 +1,342 @@
+package gui;
+
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
+import javax.swing.table.DefaultTableModel;
+
+import database.DBConnection;
+import net.miginfocom.swing.MigLayout;
+
+public class MainFrame extends JFrame {
+	
+	private Color frameColor = new Color(32, 32, 32);
+	private Color backgroundColor = new Color(25, 25, 25);
+	private Color foregroundColor = new Color(255, 255, 255);
+
+	private JPanel contentPane;
+	private JMenuBar menuBar;
+	private JMenu menu;
+	private JMenu menu_1;
+	private JMenuItem menuItem;
+	private JPanel configPanel;
+	private JPanel tablePanel;
+	private JLabel lblConfigPanel;
+	private JPanel configElementsPanel;
+	private JButton btnStartSearch;
+	private JTextField tfSearch;
+	private JLabel lblInstitut;
+	private JButton btnIfwt;
+	private JButton btnLmn;
+	private JButton btnLmw;
+	private JButton btnLot;
+	private JButton btnLwf;
+	private JLabel lblGeraetezentrum;
+	private JButton btnMnaf;
+	private JLabel lblIntern;
+	private JButton btnIntern;
+	private JLabel lblExtern;
+	private JButton btnExtern;
+	private JScrollPane spTable;
+	public static JTable table; // Write Getter later
+	private JPanel infoPanel;
+	private JLabel lblAllgemeineUnterweisung;
+	private JLabel lblLaboreinrichtungen;
+	private JLabel lblGefahrstoffe;
+	private JScrollPane spAllgemeineUnterweisungen;
+	private JTextArea taAllgemeineUnterweisung;
+	private JScrollPane spLaboreinrichtungen;
+	private JTextArea taLaboreinrichtungen;
+	private JScrollPane spGefahrstoffe;
+	private JTextArea taGefahrstoffe;
+	
+	Connection conn = null;
+	static DefaultTableModel dtm = new DefaultTableModel(new String[] {"ID", "Name", "Vorname", "Datum", "Ifwt", "MNaF", "Intern", "Beschaeftigungsverhaeltnis", "Beginn", "Ende", "Extern", "E-Mail Adresse"}, 0);
+
+	
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					MainFrame frame = new MainFrame();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public MainFrame() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setTitle("Sicherheitsunterweisung am Institut für Werkstofftechnik der Universität Siegen");
+		setBackground(frameColor);
+		setForeground(foregroundColor);
+		setBounds(100, 100, 1200, 600);
+		contentPane = new JPanel();
+		contentPane.setBackground(backgroundColor);
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(new MigLayout("", "[1200,grow]", "[150.0,grow][300.0,grow][150.0,grow]"));
+		
+
+		// Building the menu bar
+		menuBar = new JMenuBar();
+		menuBar.setBackground(frameColor);
+		menuBar.setForeground(foregroundColor);
+		
+		// Building the menu (Datei)
+		menu = new JMenu("Datei");
+		menu.setForeground(foregroundColor);
+		menuBar.add(menu);
+		
+		// Menu item (Datei Speichern)
+		menuItem = new JMenuItem("Datei Speichern");
+		menuItem.setBackground(backgroundColor);
+		menuItem.setForeground(foregroundColor);
+		menu.add(menuItem);
+		
+		// Menu item (Datei Importieren)
+		menuItem = new JMenuItem("Datei Importieren");
+		menuItem.setBackground(backgroundColor);
+		menuItem.setForeground(foregroundColor);
+		menu.add(menuItem);
+		
+		// Menu item (Datei Exportieren)
+		menuItem = new JMenuItem("Datei Exportieren");
+		menuItem.setBackground(backgroundColor);
+		menuItem.setForeground(foregroundColor);
+		menu.add(menuItem);
+		
+		// Building the menu (Datenbank Laden)
+		menu = new JMenu("Datenbank Laden");
+		menu.setBackground(backgroundColor);
+		menu.setForeground(foregroundColor);
+		menuBar.add(menu);
+		
+		// Building the menu (Sortieren)
+		menu = new JMenu("Sortieren");
+		menu.setBackground(backgroundColor);
+		menu.setForeground(foregroundColor);
+		menuBar.add(menu);
+		
+		// Building the menu (Daten Bearbeiten)
+		menu_1 = new JMenu("Daten Bearbeiten");
+		menu_1.addMenuListener(new MenuListener() {
+	        @Override
+	        public void menuSelected(MenuEvent e) {
+	        	Login login = Login.getInstance();
+	        }
+
+	        @Override
+	        public void menuDeselected(MenuEvent e) {
+	            //System.out.println("menuDeselected");
+
+	        }
+
+	        @Override
+	        public void menuCanceled(MenuEvent e) {
+	            //System.out.println("menuCanceled");
+
+	        }
+		});
+		menu_1.setBackground(backgroundColor);
+		menu_1.setForeground(foregroundColor);
+		menuBar.add(menu_1);
+		
+		// Building the menu (Drucken)
+		menu = new JMenu("Drucken");
+		menu.setBackground(backgroundColor);
+		menu.setForeground(foregroundColor);
+		menuBar.add(menu);
+		
+		// Adding the bar to the frame
+		setJMenuBar(menuBar);
+		
+		// Building the panel for all elements like buttons
+		configPanel = new JPanel();
+		configPanel.setBackground(backgroundColor);
+		configPanel.setForeground(foregroundColor);
+		contentPane.add(configPanel, "cell 0 0,grow");
+		configPanel.setLayout(new MigLayout("", "[grow]", "[grow][grow]"));
+		
+		// Label for the config panel title
+		lblConfigPanel = new JLabel("Sicherheitsunterweisung am Institut für Werkstofftechnik und Gerätezentrum MNaF");
+		lblConfigPanel.setFont(new Font("Dialog", Font.BOLD, 18));
+		lblConfigPanel.setForeground(foregroundColor);
+		configPanel.add(lblConfigPanel, "cell 0 0");
+		
+		// Panel that holds the elements form configPanel
+		configElementsPanel = new JPanel();
+		configElementsPanel.setBackground(backgroundColor);
+		configElementsPanel.setForeground(foregroundColor);
+		configPanel.add(configElementsPanel, "cell 0 1,grow");
+		configElementsPanel.setLayout(new MigLayout("", "[grow]25[grow]25[grow]25[grow]25[grow]", "[grow]8[grow]"));
+		
+		tfSearch = new JTextField();
+		tfSearch.setText("Bitte Namen eingeben");
+		configElementsPanel.add(tfSearch, "cell 0 0,growx");
+		tfSearch.setColumns(10);
+		
+		lblInstitut = new JLabel("Institut für Werkstoffstechnik (Ifwt)");
+		lblInstitut.setFont(new Font("Dialog", Font.BOLD, 13));
+		lblInstitut.setForeground(foregroundColor);
+		configElementsPanel.add(lblInstitut, "cell 1 0");
+		
+		lblGeraetezentrum = new JLabel("Gerätezentrum (MNaF)");
+		lblGeraetezentrum.setFont(new Font("Dialog", Font.BOLD, 13));
+		lblGeraetezentrum.setForeground(foregroundColor);
+		configElementsPanel.add(lblGeraetezentrum, "cell 2 0");
+		
+		lblIntern = new JLabel("Intern");
+		lblIntern.setFont(new Font("Dialog", Font.BOLD, 13));
+		lblIntern.setForeground(foregroundColor);
+		configElementsPanel.add(lblIntern, "cell 3 0");
+		
+		lblExtern = new JLabel("Extern");
+		lblExtern.setFont(new Font("Dialog", Font.BOLD, 13));
+		lblExtern.setForeground(foregroundColor);
+		configElementsPanel.add(lblExtern, "cell 4 0");
+		
+		btnStartSearch = new JButton("Suche Starten");
+		configElementsPanel.add(btnStartSearch, "cell 0 1,aligny top");
+		
+		btnIfwt = new JButton("Ifwt");
+		configElementsPanel.add(btnIfwt, "flowx,cell 1 1,aligny top");
+		
+		btnLmn = new JButton("LMN");
+		configElementsPanel.add(btnLmn, "cell 1 1,aligny top");
+		
+		btnLmw = new JButton("LMW");
+		configElementsPanel.add(btnLmw, "cell 1 1,aligny top");
+		
+		btnLot = new JButton("LOT");
+		configElementsPanel.add(btnLot, "cell 1 1,aligny top");
+		
+		btnLwf = new JButton("LWF");
+		configElementsPanel.add(btnLwf, "cell 1 1,aligny top");
+		
+		btnMnaf = new JButton("MNaF");
+		configElementsPanel.add(btnMnaf, "cell 2 1,aligny top");
+		
+		btnIntern = new JButton("Intern");
+		configElementsPanel.add(btnIntern, "cell 3 1,aligny top");
+		
+		btnExtern = new JButton("Extern");
+		configElementsPanel.add(btnExtern, "cell 4 1,aligny top");
+		
+		// Building the panel for the table
+		tablePanel = new JPanel();
+		tablePanel.setBackground(backgroundColor);
+		tablePanel.setForeground(foregroundColor);
+		contentPane.add(tablePanel, "cell 0 1,grow");
+		tablePanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
+		
+		spTable = new JScrollPane();
+		tablePanel.add(spTable, "cell 0 0,grow");
+		
+		table = new JTable();
+		spTable.setViewportView(table);
+		
+		//von Fiti: die Tabelle ist schonmal mit der Datenbank verbunden.
+		//wir müssen halt noch schauen ob sie direkt geladen werden soll, oder auf Befehl des Users
+		try {
+			conn = DBConnection.connect();
+			
+			String query = "SELECT * from Personen";
+			PreparedStatement pst = conn.prepareStatement(query);
+			ResultSet resultSet = pst.executeQuery();
+			
+			while(resultSet.next()) {
+				String a = resultSet.getString("ID");
+				String b = resultSet.getString("Name");
+				String c = resultSet.getString("Vorname");
+				String d = resultSet.getString("Datum");
+				String e = resultSet.getString("Ifwt");
+				String f = resultSet.getString("MNaF");
+				String g = resultSet.getString("Intern");
+				String h = resultSet.getString("Beschaeftigungsverhältnis");
+				String i = resultSet.getString("Beginn");
+				String j = resultSet.getString("Ende");
+				String k = resultSet.getString("Extern");
+				String l = resultSet.getString("E-Mail Adresse");
+			
+				dtm.addRow(new Object[] {a,b,c,d,e,f,g,h,i,j,k,l});
+			}
+			
+			conn.close();
+			table.setModel(dtm);
+			
+		}catch(Exception e) {
+			e.getMessage();
+		}
+		
+		// Building the panel for the informations that will be displayed
+		infoPanel = new JPanel();
+		infoPanel.setBackground(backgroundColor);
+		infoPanel.setForeground(foregroundColor);
+		contentPane.add(infoPanel, "cell 0 2,grow");
+		infoPanel.setLayout(new MigLayout("", "[grow]25[grow]25[grow]", "[][grow]"));
+		
+		// Building the (Allgemeine Unterweisung) information text area with title
+		lblAllgemeineUnterweisung = new JLabel("Allgemeine Unterweisung (Datum s.o.)");
+		lblAllgemeineUnterweisung.setFont(new Font("Dialog", Font.BOLD, 13));
+		lblAllgemeineUnterweisung.setForeground(foregroundColor);
+		infoPanel.add(lblAllgemeineUnterweisung, "cell 0 0");
+		
+		spAllgemeineUnterweisungen = new JScrollPane();
+		infoPanel.add(spAllgemeineUnterweisungen, "cell 0 1,grow");
+		
+		taAllgemeineUnterweisung = new JTextArea();
+		spAllgemeineUnterweisungen.setViewportView(taAllgemeineUnterweisung);
+		
+		// Building the (Laboreinrichtungen) informationen text area with title
+		lblLaboreinrichtungen = new JLabel("Laboreinrichtungen");
+		lblLaboreinrichtungen.setFont(new Font("Dialog", Font.BOLD, 13));
+		lblLaboreinrichtungen.setForeground(foregroundColor);
+		infoPanel.add(lblLaboreinrichtungen, "cell 1 0");
+		
+		spLaboreinrichtungen = new JScrollPane();
+		infoPanel.add(spLaboreinrichtungen, "cell 1 1,grow");
+		
+		taLaboreinrichtungen = new JTextArea();
+		spLaboreinrichtungen.setViewportView(taLaboreinrichtungen);
+		
+		// Building the (Gefahrstoffe) information text area with title
+		lblGefahrstoffe = new JLabel("Gefahrstoffe");
+		lblGefahrstoffe.setFont(new Font("Dialog", Font.BOLD, 13));
+		lblGefahrstoffe.setForeground(foregroundColor);
+		infoPanel.add(lblGefahrstoffe, "cell 2 0");
+		
+		spGefahrstoffe = new JScrollPane();
+		infoPanel.add(spGefahrstoffe, "cell 2 1,grow");
+		
+		taGefahrstoffe = new JTextArea();
+		spGefahrstoffe.setViewportView(taGefahrstoffe);
+	}
+
+}
