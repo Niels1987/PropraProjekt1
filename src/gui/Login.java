@@ -13,6 +13,7 @@ import admin.AccessData;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
@@ -38,9 +39,7 @@ public class Login extends JDialog {
 		return login;
 	}
 
-	/**
-	 * Create the dialog.
-	 */
+	// Creating the dialog.
 	private Login() {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setTitle("Admin Login");
@@ -81,10 +80,10 @@ public class Login extends JDialog {
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				if (AccessData.chekUsrname(tfBenutzername.getText()) && AccessData.checkPassword(pfPasswort.getText())) {
-					System.out.println("Anmeldedaten korrekt!");
+					DataEditor dataEditor =DataEditor.getInstance();
 					login.dispose();
 				} else {
-					System.out.println("Benutzername oder Passwort falsch!");
+					JOptionPane.showMessageDialog(null, "Benutzername oder Passwort falsch!");
 				}
 			}
 		});

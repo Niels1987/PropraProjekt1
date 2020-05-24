@@ -3,6 +3,10 @@ package gui;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,8 +29,6 @@ import javax.swing.table.DefaultTableModel;
 
 import database.DBConnection;
 import net.miginfocom.swing.MigLayout;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class MainFrame extends JFrame {
 	
@@ -58,7 +60,7 @@ public class MainFrame extends JFrame {
 	private JLabel lblExtern;
 	private JButton btnExtern;
 	private JScrollPane spTable;
-	public static JTable table; // Write Getter later
+	protected static JTable table;
 	private JPanel infoPanel;
 	private JLabel lblAllgemeineUnterweisung;
 	private JLabel lblLaboreinrichtungen;
@@ -70,8 +72,8 @@ public class MainFrame extends JFrame {
 	private JScrollPane spGefahrstoffe;
 	private JTextArea taGefahrstoffe;
 	
-	Connection conn = null;
-	static DefaultTableModel dtm = new DefaultTableModel(new String[] {"ID", "Name", "Vorname", "Datum", "Ifwt", "MNaF", "Intern", "Beschaeftigungsverhaeltnis", "Beginn", "Ende", "Extern", "E-Mail Adresse"}, 0);
+	private Connection conn = null;
+	private static DefaultTableModel dtm;
 
 	
 	/**
@@ -283,10 +285,18 @@ public class MainFrame extends JFrame {
 		contentPane.add(tablePanel, "cell 0 1,grow");
 		tablePanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
 		
+		// Creating a default table model with disabled cell editing
+		dtm = new DefaultTableModel(new String[][] {}, new String[] {"ID", "Name", "Vorname", "Datum", "Ifwt", "MNaF", "Intern",
+																	 "Beschaeftigungsverhaeltnis", "Beginn", "Ende", "Extern", "E-Mail Adresse"}) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
 		spTable = new JScrollPane();
 		tablePanel.add(spTable, "cell 0 0,grow");
 		
-		table = new JTable();
+		table = new JTable(dtm);
 		spTable.setViewportView(table);
 		
 		//von Fiti: die Tabelle ist schonmal mit der Datenbank verbunden.
@@ -299,24 +309,24 @@ public class MainFrame extends JFrame {
 			ResultSet resultSet = pst.executeQuery();
 			
 			while(resultSet.next()) {
-				String a = resultSet.getString("ID");
-				String b = resultSet.getString("Name");
-				String c = resultSet.getString("Vorname");
-				String d = resultSet.getString("Datum");
-				String e = resultSet.getString("Ifwt");
-				String f = resultSet.getString("MNaF");
-				String g = resultSet.getString("Intern");
-				String h = resultSet.getString("Beschaeftigungsverhaeltnis");
-				String i = resultSet.getString("Beginn");
-				String j = resultSet.getString("Ende");
-				String k = resultSet.getString("Extern");
-				String l = resultSet.getString("E-Mail Adresse");
+				String id = resultSet.getString("ID");
+				String name = resultSet.getString("Name");
+				String vorname = resultSet.getString("Vorname");
+				String datum = resultSet.getString("Datum");
+				String ifwt = resultSet.getString("Ifwt");
+				String manf = resultSet.getString("MNaF");
+				String intern = resultSet.getString("Intern");
+				String beschverh = resultSet.getString("Beschaeftigungsverhaeltnis");
+				String beginn = resultSet.getString("Beginn");
+				String ende = resultSet.getString("Ende");
+				String extern = resultSet.getString("Extern");
+				String email = resultSet.getString("E-Mail Adresse");
 			
-				dtm.addRow(new Object[] {a,b,c,d,e,f,g,h,i,j,k,l});
+				dtm.addRow(new Object[] {id, name, vorname, datum, ifwt, manf,
+										 intern, beschverh, beginn, ende, extern, email});
 			}
 			
 			conn.close();
-			table.setModel(dtm);
 			
 		}catch(Exception e) {
 			e.getMessage();
