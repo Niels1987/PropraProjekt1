@@ -25,6 +25,8 @@ import javax.swing.table.DefaultTableModel;
 
 import database.DBConnection;
 import net.miginfocom.swing.MigLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class MainFrame extends JFrame {
 	
@@ -226,18 +228,43 @@ public class MainFrame extends JFrame {
 		configElementsPanel.add(btnStartSearch, "cell 0 1,aligny top");
 		
 		btnIfwt = new JButton("Ifwt");
+		btnIfwt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				loadFilter(DBConnection.getIfwt());
+			}
+		});
 		configElementsPanel.add(btnIfwt, "flowx,cell 1 1,aligny top");
 		
 		btnLmn = new JButton("LMN");
+		btnLmn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				loadFilter(DBConnection.getLMN());
+			}
+		});
 		configElementsPanel.add(btnLmn, "cell 1 1,aligny top");
 		
 		btnLmw = new JButton("LMW");
+		btnLmw.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				loadFilter(DBConnection.getLMW());
+			}
+		});
 		configElementsPanel.add(btnLmw, "cell 1 1,aligny top");
 		
 		btnLot = new JButton("LOT");
+		btnLot.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				loadFilter(DBConnection.getLOT());
+			}
+		});
 		configElementsPanel.add(btnLot, "cell 1 1,aligny top");
 		
 		btnLwf = new JButton("LWF");
+		btnLwf.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				loadFilter(DBConnection.getLWF());
+			}
+		});
 		configElementsPanel.add(btnLwf, "cell 1 1,aligny top");
 		
 		btnMnaf = new JButton("MNaF");
@@ -279,7 +306,7 @@ public class MainFrame extends JFrame {
 				String e = resultSet.getString("Ifwt");
 				String f = resultSet.getString("MNaF");
 				String g = resultSet.getString("Intern");
-				String h = resultSet.getString("Beschaeftigungsverhältnis");
+				String h = resultSet.getString("Beschaeftigungsverhaeltnis");
 				String i = resultSet.getString("Beginn");
 				String j = resultSet.getString("Ende");
 				String k = resultSet.getString("Extern");
@@ -338,5 +365,22 @@ public class MainFrame extends JFrame {
 		taGefahrstoffe = new JTextArea();
 		spGefahrstoffe.setViewportView(taGefahrstoffe);
 	}
-
+	
+	public void loadFilter(String[][] filteredTable) {
+		dtm.setRowCount(0);
+		for (int i = 0; i < filteredTable.length; i++) {
+			dtm.addRow(new String[] {filteredTable[i][0],
+									 filteredTable[i][1],
+									 filteredTable[i][2],
+									 filteredTable[i][3],
+									 filteredTable[i][4],
+									 filteredTable[i][5],
+									 filteredTable[i][6],
+									 filteredTable[i][7],
+									 filteredTable[i][8],
+									 filteredTable[i][9],
+									 filteredTable[i][10],
+									 filteredTable[i][11]});
+		}
+	}
 }
