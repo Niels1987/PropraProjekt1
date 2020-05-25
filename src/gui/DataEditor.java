@@ -88,8 +88,13 @@ public class DataEditor extends JFrame{
 																	 "Beschaeftigungsverhaeltnis", "Beginn", "Ende", "Extern", "E-Mail Adresse"} );
 		dtm.setRowCount(0);
 		
-		String[][] rowValue = new String[MainFrame.getDefaultTableModel().getColumnCount()][MainFrame.getDefaultTableModel().getRowCount()];
-		
+		String[] rowValue = new String[MainFrame.getDefaultTableModel().getRowCount()];
+		for (int column = 0; column < MainFrame.getDefaultTableModel().getColumnCount(); column++) {
+			for (int row = 0; row < MainFrame.getDefaultTableModel().getRowCount(); row++) {
+				String value = MainFrame.getDefaultTableModel().getValueAt(row, column).toString();
+				//rowValue = 
+			}
+		}
 		
 		
 		
