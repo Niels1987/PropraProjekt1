@@ -25,6 +25,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import database.DBConnection;
@@ -71,6 +72,7 @@ public class MainFrame extends JFrame {
 	private JTextArea taLaboreinrichtungen;
 	private JScrollPane spGefahrstoffe;
 	private JTextArea taGefahrstoffe;
+	private static DefaultTableCellRenderer cellRenderer;
 	
 	private Connection conn = null;
 	private static DefaultTableModel dtm;
@@ -326,6 +328,33 @@ public class MainFrame extends JFrame {
 				dtm.addRow(new String[] {id, name, vorname, datum, ifwt, manf,
 										 intern, beschverh, beginn, ende, extern, email});
 			}
+			
+//			jtable structure formatting
+					table.getColumnModel().getColumn(0).setPreferredWidth(5);
+					table.getColumnModel().getColumn(1).setPreferredWidth(65);
+					table.getColumnModel().getColumn(2).setPreferredWidth(65);
+					table.getColumnModel().getColumn(3).setPreferredWidth(35);
+					table.getColumnModel().getColumn(4).setPreferredWidth(28);
+					table.getColumnModel().getColumn(5).setPreferredWidth(28);
+					table.getColumnModel().getColumn(6).setPreferredWidth(28);
+					table.getColumnModel().getColumn(7).setPreferredWidth(145);
+					table.getColumnModel().getColumn(8).setPreferredWidth(30);
+					table.getColumnModel().getColumn(9).setPreferredWidth(30);
+					table.getColumnModel().getColumn(10).setPreferredWidth(28);
+					table.getColumnModel().getColumn(11).setPreferredWidth(200);
+
+					table.setRowHeight(20);
+					
+					cellRenderer = new DefaultTableCellRenderer();
+				    cellRenderer.setHorizontalAlignment(JLabel.CENTER);
+				    table.getColumnModel().getColumn(3).setCellRenderer(cellRenderer);
+				    table.getColumnModel().getColumn(4).setCellRenderer(cellRenderer);
+				    table.getColumnModel().getColumn(5).setCellRenderer(cellRenderer);
+				    table.getColumnModel().getColumn(6).setCellRenderer(cellRenderer);
+				    table.getColumnModel().getColumn(8).setCellRenderer(cellRenderer);
+				    table.getColumnModel().getColumn(9).setCellRenderer(cellRenderer);
+				    table.getColumnModel().getColumn(10).setCellRenderer(cellRenderer);
+			
 			
 			conn.close();
 			
