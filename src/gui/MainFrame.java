@@ -304,7 +304,7 @@ public class MainFrame extends JFrame {
 		try {
 			conn = DBConnection.connect();
 			
-			String query = "SELECT * from Personen";
+			String query = "SELECT * FROM Personen";
 			PreparedStatement pst = conn.prepareStatement(query);
 			ResultSet resultSet = pst.executeQuery();
 			
@@ -322,7 +322,7 @@ public class MainFrame extends JFrame {
 				String extern = resultSet.getString("Extern");
 				String email = resultSet.getString("E-Mail Adresse");
 			
-				dtm.addRow(new Object[] {id, name, vorname, datum, ifwt, manf,
+				dtm.addRow(new String[] {id, name, vorname, datum, ifwt, manf,
 										 intern, beschverh, beginn, ende, extern, email});
 			}
 			
@@ -392,5 +392,9 @@ public class MainFrame extends JFrame {
 									 filteredTable[i][10],
 									 filteredTable[i][11]});
 		}
+	}
+	
+	public static DefaultTableModel getDefaultTableModel() {
+		return dtm;
 	}
 }

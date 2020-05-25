@@ -2,17 +2,21 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.Dimension;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-
-import net.miginfocom.swing.MigLayout;
-import javax.swing.JLabel;
 import java.awt.Font;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+import database.DBConnection;
+import net.miginfocom.swing.MigLayout;
 
 public class DataEditor extends JFrame{
 	
@@ -32,6 +36,9 @@ public class DataEditor extends JFrame{
 	private JScrollPane spTable;
 	private JTable table;
 	private JButton btnAenderungenSpeichern;
+	
+	private DefaultTableModel dtm;
+	private Connection con = null;
 	
 	
 	// Method for getting the frame, because of singelton scheme
@@ -77,11 +84,49 @@ public class DataEditor extends JFrame{
 		contentPane.add(tablePanel, "cell 0 1,grow");
 		tablePanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
 		
+		dtm = new DefaultTableModel(new String[][] {}, new String[] {"ID", "Name", "Datum", "Ifwt", "MNaF", "Intern",
+																	 "Beschaeftigungsverhaeltnis", "Beginn", "Ende", "Extern", "E-Mail Adresse"} );
+		dtm.setRowCount(0);
+		
+		String[][] rowValue = new String[MainFrame.getDefaultTableModel().getColumnCount()][MainFrame.getDefaultTableModel().getRowCount()];
+		
+		
+		
+		
 		spTable = new JScrollPane();
 		tablePanel.add(spTable, "cell 0 0,grow");
 		
 		table = new JTable();
 		spTable.setViewportView(table);
+		
+		// Loading the data from the database to the table
+		/*try {
+			con = DBConnection.connect();
+			
+			String query = "SELECT * FROM Personen";
+			PreparedStatement pst = con.prepareStatement(query);
+			ResultSet resultSet = pst.executeQuery();
+			
+			while (resultSet.next()) {
+				String id = resultSet.getString("ID");
+				String name = resultSet.getString("Name");
+				String vorname = resultSet.getString("Vorname");
+				String datum = resultSet.getString("Datum");
+				String ifwt = resultSet.getString("Ifwt");
+				String manf = resultSet.getString("MNaF");
+				String intern = resultSet.getString("Intern");
+				String beschverh = resultSet.getString("Beschaeftigungsverhaeltnis");
+				String beginn = resultSet.getString("Beginn");
+				String ende = resultSet.getString("Ende");
+				String extern = resultSet.getString("Extern");
+				String email = resultSet.getString("E-Mail Adresse");
+				
+				dtm.addRow(new Object[] {id, name, vorname, datum, ifwt, manf,
+						 intern, beschverh, beginn, ende, extern, email});
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}*/
 		
 		// Panel for the update button
 		buttonPanel = new JPanel();
@@ -94,5 +139,9 @@ public class DataEditor extends JFrame{
 		buttonPanel.add(btnAenderungenSpeichern, "cell 0 0");
 		
 		setVisible(true);
+	}
+	
+	private static void addRow() {
+		
 	}
 }

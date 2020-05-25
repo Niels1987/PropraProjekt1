@@ -20,7 +20,7 @@ public class DBConnection {
     	   Class.forName("org.sqlite.JDBC");
     	   con = DriverManager.getConnection(url);
     	   //System.out.println("Connection SuccesFul");
-    	   JOptionPane.showMessageDialog(null, "Verbindung zur Datenbank hergestellt.");
+    	   //JOptionPane.showMessageDialog(null, "Verbindung zur Datenbank hergestellt.");
     	   return con;
        }catch(Exception e) {
     	   System.out.println(e.getMessage());
