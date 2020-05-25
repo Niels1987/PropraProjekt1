@@ -293,6 +293,7 @@ public class MainFrame extends JFrame {
 				return false;
 			}
 		};
+		//Change
 		spTable = new JScrollPane();
 		tablePanel.add(spTable, "cell 0 0,grow");
 		
