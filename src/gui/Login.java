@@ -27,8 +27,8 @@ public class Login extends JDialog {
 	private JPanel buttonPanel;
 	private JLabel lblPasswort;
 	private JLabel lblBenutzername;
-	private JTextField tfBenutzername;
-	private JPasswordField pfPasswort;
+	private static JTextField tfBenutzername;
+	private static JPasswordField pfPasswort;
 	private JButton btnLogin;
 	
 	private Color frameColor = new Color(32, 32, 32);
@@ -36,6 +36,8 @@ public class Login extends JDialog {
 	private Color foregroundColor = new Color(255, 255, 255);
 	
 	public static Login getInstance() {
+		tfBenutzername.setText("");
+		pfPasswort.setText("");
 		return login;
 	}
 
