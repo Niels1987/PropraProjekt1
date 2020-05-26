@@ -157,6 +157,7 @@ public class MainFrame extends JFrame {
 	        @Override
 	        public void menuSelected(MenuEvent e) {
 	        	Login login = Login.getInstance();
+	        	login.setVisible(true);
 	        }
 
 	        @Override
