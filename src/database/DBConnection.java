@@ -208,7 +208,7 @@ public class DBConnection {
 		}
 	}
 	
-	// Method that returns all MNaF that are not null
+	// Method that returns all MNaF that are not null !MUSS ICH NOCH UEBERARBEITEN! Dominik
 	public static String[][] getMNaF()  {
 		try {
 			con = DriverManager.getConnection(url);
@@ -243,4 +243,76 @@ public class DBConnection {
 			return null;
 		}
 	}
+	
+	//Method that returns all rows of the table where intern equals 'ja'
+	public static String[][] getIntern()  {
+		try {
+			con = DriverManager.getConnection(url);
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT COUNT (ID) FROM Personen WHERE Intern='Ja'");
+			int rowCount = rs.getInt(1);
+			rs = stmt.executeQuery("SELECT * FROM Personen WHERE Intern='Ja'");
+			int columnCount = rs.getMetaData().getColumnCount();
+			String[][] filteredTable = new String[rowCount][columnCount];
+			int i = 0;
+			
+			while (rs.next()) {
+				filteredTable[i][0] = rs.getString("ID");
+				filteredTable[i][1] = rs.getString("Name");
+				filteredTable[i][2] = rs.getString("Vorname");
+				filteredTable[i][3] = rs.getString("Datum");
+				filteredTable[i][4] = rs.getString("Ifwt");
+				filteredTable[i][5] = rs.getString("MNaF");
+				filteredTable[i][6] = rs.getString("Intern");
+				filteredTable[i][7] = rs.getString("Beschaeftigungsverhaeltnis");
+				filteredTable[i][8] = rs.getString("Beginn");
+				filteredTable[i][9] = rs.getString("Ende");
+				filteredTable[i][10] = rs.getString("Extern");
+				filteredTable[i][11] = rs.getString("E-Mail Adresse");
+				
+				i++;
+			}
+			return filteredTable;
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	//Method that returns all rows of the table where extern equals 'ja'
+		public static String[][] getExtern()  {
+			try {
+				con = DriverManager.getConnection(url);
+				Statement stmt = con.createStatement();
+				ResultSet rs = stmt.executeQuery("SELECT COUNT (ID) FROM Personen WHERE Extern='Ja'");
+				int rowCount = rs.getInt(1);
+				rs = stmt.executeQuery("SELECT * FROM Personen WHERE Extern='Ja'");
+				int columnCount = rs.getMetaData().getColumnCount();
+				String[][] filteredTable = new String[rowCount][columnCount];
+				int i = 0;
+				
+				while (rs.next()) {
+					filteredTable[i][0] = rs.getString("ID");
+					filteredTable[i][1] = rs.getString("Name");
+					filteredTable[i][2] = rs.getString("Vorname");
+					filteredTable[i][3] = rs.getString("Datum");
+					filteredTable[i][4] = rs.getString("Ifwt");
+					filteredTable[i][5] = rs.getString("MNaF");
+					filteredTable[i][6] = rs.getString("Intern");
+					filteredTable[i][7] = rs.getString("Beschaeftigungsverhaeltnis");
+					filteredTable[i][8] = rs.getString("Beginn");
+					filteredTable[i][9] = rs.getString("Ende");
+					filteredTable[i][10] = rs.getString("Extern");
+					filteredTable[i][11] = rs.getString("E-Mail Adresse");
+					
+					i++;
+				}
+				return filteredTable;
+				
+			} catch(SQLException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
 }

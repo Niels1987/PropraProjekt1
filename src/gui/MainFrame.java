@@ -5,8 +5,6 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -274,12 +272,27 @@ public class MainFrame extends JFrame {
 		configElementsPanel.add(btnLwf, "cell 1 1,aligny top");
 		
 		btnMnaf = new JButton("MNaF");
+		btnMnaf.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				loadFilter(DBConnection.getMNaF());
+			}
+		});
 		configElementsPanel.add(btnMnaf, "cell 2 1,aligny top");
 		
 		btnIntern = new JButton("Intern");
+		btnIntern.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				loadFilter(DBConnection.getIntern());
+			}
+		});
 		configElementsPanel.add(btnIntern, "cell 3 1,aligny top");
 		
 		btnExtern = new JButton("Extern");
+		btnExtern.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				loadFilter(DBConnection.getExtern());
+			}
+		});
 		configElementsPanel.add(btnExtern, "cell 4 1,aligny top");
 		
 		// Building the panel for the table
@@ -288,17 +301,12 @@ public class MainFrame extends JFrame {
 		tablePanel.setForeground(foregroundColor);
 		contentPane.add(tablePanel, "cell 0 1,grow");
 		tablePanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
-		
-		// Creating a default table model with disabled cell editing
-
 
 		spTable = new JScrollPane();
 		tablePanel.add(spTable, "cell 0 0,grow");
 		spTable.setViewportView(table);
 		
 		getData();
-		
-		
 		
 		// Building the panel for the informations that will be displayed
 		infoPanel = new JPanel();

@@ -83,6 +83,7 @@ public class Login extends JDialog {
 			public void actionPerformed(ActionEvent evt) {
 				if (AccessData.chekUsrname(tfBenutzername.getText()) && AccessData.checkPassword(pfPasswort.getText())) {
 					DataEditor dataEditor =DataEditor.getInstance();
+					dataEditor.setVisible(true);
 					login.dispose();
 				} else {
 					JOptionPane.showMessageDialog(null, "Benutzername oder Passwort falsch!");
