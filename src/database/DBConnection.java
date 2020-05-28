@@ -28,6 +28,17 @@ public class DBConnection {
        }
 	}
 	
+	public static Connection connect(String filePath) {
+		try {
+			Class.forName("org.sqlite.JDBC");
+			con = DriverManager.getConnection("jdbc:sqlite:" + filePath);
+			return con;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	// Method that returns all rows of the table where Ifwt is not null
 	public static String[][] getIfwt()  {
 		try {

@@ -6,10 +6,15 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -23,6 +28,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -37,9 +43,13 @@ public class MainFrame extends JFrame {
 
 	private JPanel contentPane;
 	private JMenuBar menuBar;
+	private JMenu fileMenu;
+	private JMenu sortMenu;
 	private JMenu menu;
-	private JMenu menu_1;
-	private JMenuItem menuItem;
+	private JMenu editMenu;
+	private JMenuItem miSave;
+	private JMenuItem miImport;
+	private JMenuItem miExport;
 	private JPanel configPanel;
 	private static JPanel tablePanel;
 	private JLabel lblConfigPanel;
@@ -115,43 +125,172 @@ public class MainFrame extends JFrame {
 		menuBar.setForeground(foregroundColor);
 		
 		// Building the menu (Datei)
-		menu = new JMenu("Datei");
-		menu.setForeground(foregroundColor);
-		menuBar.add(menu);
+		fileMenu = new JMenu("Datei");
+		fileMenu.setForeground(foregroundColor);
+		menuBar.add(fileMenu);
 		
 		// Menu item (Datei Speichern)
-		menuItem = new JMenuItem("Datei Speichern");
-		menuItem.setBackground(backgroundColor);
-		menuItem.setForeground(foregroundColor);
-		menu.add(menuItem);
+		miSave = new JMenuItem("Datenbank Speichern");
+		miSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				JFileChooser fc = new JFileChooser();
+				fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+				fc.setFileFilter(new FileNameExtensionFilter("*.db", "db"));
+				int status = fc.showSaveDialog(null);
+				if (status == JFileChooser.APPROVE_OPTION) {
+					// Need to code what happens when the db should be saved
+					String selDir = fc.getSelectedFile().getAbsolutePath();
+					//String fileName = fc.getSelectedFile().getName();
+					//System.out.println(selDir + "\n" + fileName);
+					try {
+						Connection con = DriverManager.getConnection("jdbc:sqlite:" + selDir); // Creating empty data base
+						conn = DBConnection.connect(); //Connecting to existing data base 
+						String query = "SELECT * FROM Personen";
+						PreparedStatement pst = conn.prepareStatement(query);
+						ResultSet rs = pst.executeQuery();
+						String tableName = rs.getMetaData().getTableName(1); // Saves the Table Name
+						String[] attributes = new String[rs.getMetaData().getColumnCount()]; //Saves the Attributes from the Table that will be copied
+						String[] attributeTypes = new String[rs.getMetaData().getColumnCount()]; // Saves the Attribute Types
+						for (int col = 0; col < rs.getMetaData().getColumnCount(); col ++) {
+							attributes[col] = rs.getMetaData().getColumnName(col+1);
+							attributeTypes[col] = rs.getMetaData().getColumnTypeName(col+1);
+							
+						}
+						
+						//Creating a copy of the default database table Personen
+						String sqlCreateTable = "CREATE TABLE IF NOT EXISTS "+ tableName +
+								 "("+attributes[0]+" "+attributeTypes[0]+" PRIMARY KEY NOT NULL UNIQUE,"
+								    +attributes[1]+" "+attributeTypes[1]+","
+								    +attributes[2]+" "+attributeTypes[2]+","
+								    +attributes[3]+" "+attributeTypes[3]+","
+								    +attributes[4]+" "+attributeTypes[4]+","
+								    +attributes[5]+" "+attributeTypes[5]+","
+								    +attributes[6]+" "+attributeTypes[6]+","
+								    +attributes[7]+" "+attributeTypes[7]+","
+								    +attributes[8]+" "+attributeTypes[8]+","
+								    +attributes[9]+" "+attributeTypes[9]+","
+								    +attributes[10]+" "+attributeTypes[10]+","
+								    +"'"+attributes[11]+"'"+" "+attributeTypes[11]+","
+								    +"'"+attributes[12]+"'"+" "+attributeTypes[12]+","
+								    +attributes[13]+" "+attributeTypes[13]+","
+									+attributes[14]+" "+attributeTypes[14]
+								    +");";
+						Statement createTable = con.createStatement();
+						createTable.execute(sqlCreateTable);
+						
+						//Filling the copied table with data from the default data base table
+						Statement fillTable = con.createStatement();
+						while (rs.next()) {
+							fillTable.execute("INSERT INTO "+tableName+" ("+attributes[0]+","+attributes[1]+","+attributes[2]+","+attributes[3]+","+attributes[4]+","+attributes[5]+","
+																		  +attributes[6]+","+attributes[7]+","+attributes[8]+","+attributes[9]+","+attributes[10]+",'"+attributes[11]+"','"
+																		  +attributes[12]+"',"+attributes[13]+","+attributes[14]+") "+
+											 "VALUES ("+rs.getString("ID")+",'"+rs.getString("Name")+"','"+rs.getString("Vorname")+"','"+rs.getString("Datum")+"','"+rs.getString("Ifwt")+"','"+rs.getString("MNaF")+"','"
+											 		   +rs.getString("Intern")+"','"+rs.getString("Beschaeftigungsverhaeltnis")+"','"+rs.getString("Beginn")+"','"+rs.getString("Ende")+"','"+rs.getString("Extern")+"','"
+											 		   +rs.getString("E-Mail Adresse")+"','"+rs.getString("Allgemeine Unterweisung")+"','"+rs.getString("Laboreinrichtungen")+"','"+rs.getString("Gefahrstoffe")+"');");							
+						}
+						createTable.close();
+						fillTable.close();
+						pst.close();
+						con.close();
+						conn.close();
+						
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		miSave.setBackground(backgroundColor);
+		miSave.setForeground(foregroundColor);
+		fileMenu.add(miSave);
 		
 		// Menu item (Datei Importieren)
-		menuItem = new JMenuItem("Datei Importieren");
-		menuItem.setBackground(backgroundColor);
-		menuItem.setForeground(foregroundColor);
-		menu.add(menuItem);
+		miImport = new JMenuItem("Datenbank Importieren");
+		miImport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				JFileChooser fc = new JFileChooser();
+				fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+				fc.setFileFilter(new FileNameExtensionFilter("*.db", "db"));
+				int status = fc.showOpenDialog(null);
+				if (status == JFileChooser.APPROVE_OPTION) {
+					String selFile = fc.getSelectedFile().getAbsolutePath();
+					// Need to code what happens when the file/db is selected
+					//System.out.println("Ausgewählte DB: " + selFile.toString());
+					conn = DBConnection.connect(selFile); // Connecting to existing data base
+					try {
+						ResultSet rsTableNames = conn.getMetaData().getTables(null, null, null, null); //Getting all tables from data base
+						ArrayList<String> tables = new ArrayList<String>(); //Creating ArrayList for table names
+						while(rsTableNames.next()) {
+							tables.add(rsTableNames.getString("TABLE_NAME")); //Saving table names from data base in ArrayList
+						}
+						//System.out.println(tables.get(0));
+						String query = "SELECT * FROM "+tables.get(0)+";";
+						PreparedStatement getTable = conn.prepareStatement(query);
+						ResultSet rs = getTable.executeQuery();
+						
+						dtm.setRowCount(0);
+						while (rs.next()) {
+							String id = rs.getString("ID");
+							String name = rs.getString("Name");
+							String vorname = rs.getString("Vorname");
+							String datum = rs.getString("Datum");
+							String ifwt = rs.getString("Ifwt");
+							String manf = rs.getString("MNaF");
+							String intern = rs.getString("Intern");
+							String beschverh = rs.getString("Beschaeftigungsverhaeltnis");								String beginn = rs.getString("Beginn");
+							String ende = rs.getString("Ende");
+							String extern = rs.getString("Extern");
+							String email = rs.getString("E-Mail Adresse");
+
+							dtm.addRow(new String[] { id, name, vorname, datum, ifwt, manf, intern, beschverh, beginn, ende, extern,
+										email });
+						}
+						dtm.fireTableDataChanged();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		miImport.setBackground(backgroundColor);
+		miImport.setForeground(foregroundColor);
+		fileMenu.add(miImport);
 		
 		// Menu item (Datei Exportieren)
-		menuItem = new JMenuItem("Datei Exportieren");
-		menuItem.setBackground(backgroundColor);
-		menuItem.setForeground(foregroundColor);
-		menu.add(menuItem);
+		miExport = new JMenuItem("Datenbank Exportieren");
+		miExport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				JFileChooser fc = new JFileChooser();
+				fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				fc.setFileFilter(new FileNameExtensionFilter("*.db", "db"));
+				int status = fc.showSaveDialog(null);
+				if (status == JFileChooser.APPROVE_OPTION) {
+					// Need to code what happens when the db should be exported
+					String selDir = fc.getSelectedFile().getAbsolutePath();
+					String fileName = fc.getSelectedFile().getName();
+					System.out.println(selDir + "\n" + fileName);
+				}
+			}
+		});
+		miExport.setBackground(backgroundColor);
+		miExport.setForeground(foregroundColor);
+		fileMenu.add(miExport);
 		
 		// Building the menu (Datenbank Laden)
-		menu = new JMenu("Datenbank Laden");
-		menu.setBackground(backgroundColor);
-		menu.setForeground(foregroundColor);
-		menuBar.add(menu);
+		//menu = new JMenu("Datenbank Laden");
+		//menu.setBackground(backgroundColor);
+		//menu.setForeground(foregroundColor);
+		//menuBar.add(menu);
 		
 		// Building the menu (Sortieren)
-		menu = new JMenu("Sortieren");
-		menu.setBackground(backgroundColor);
-		menu.setForeground(foregroundColor);
-		menuBar.add(menu);
+		sortMenu = new JMenu("Sortieren");
+		sortMenu.setBackground(backgroundColor);
+		sortMenu.setForeground(foregroundColor);
+		menuBar.add(sortMenu);
 		
 		// Building the menu (Daten Bearbeiten)
-		menu_1 = new JMenu("Daten Bearbeiten");
-		menu_1.addMenuListener(new MenuListener() {
+		editMenu = new JMenu("Daten Bearbeiten");
+		editMenu.addMenuListener(new MenuListener() {
 	        @Override
 	        public void menuSelected(MenuEvent e) {
 	        	Login login = Login.getInstance();
@@ -170,9 +309,9 @@ public class MainFrame extends JFrame {
 
 	        }
 		});
-		menu_1.setBackground(backgroundColor);
-		menu_1.setForeground(foregroundColor);
-		menuBar.add(menu_1);
+		editMenu.setBackground(backgroundColor);
+		editMenu.setForeground(foregroundColor);
+		menuBar.add(editMenu);
 		
 		// Building the menu (Drucken)
 		menu = new JMenu("Drucken");
