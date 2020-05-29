@@ -34,6 +34,8 @@ import javax.swing.table.DefaultTableModel;
 
 import database.DBConnection;
 import net.miginfocom.swing.MigLayout;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class MainFrame extends JFrame {
 	
@@ -55,7 +57,7 @@ public class MainFrame extends JFrame {
 	private JLabel lblConfigPanel;
 	private JPanel configElementsPanel;
 	private JButton btnStartSearch;
-	private JTextField tfSearch;
+	private static JTextField tfSearch;
 	private JLabel lblInstitut;
 	private JButton btnIfwt;
 	private JButton btnLmn;
@@ -214,9 +216,10 @@ public class MainFrame extends JFrame {
 				int status = fc.showOpenDialog(null);
 				if (status == JFileChooser.APPROVE_OPTION) {
 					String selFile = fc.getSelectedFile().getAbsolutePath();
+					DBConnection.setURL("jdbc:sqlite:"+selFile);
 					// Need to code what happens when the file/db is selected
 					//System.out.println("Ausgewählte DB: " + selFile.toString());
-					conn = DBConnection.connect(selFile); // Connecting to existing data base
+					conn = DBConnection.connect(); // Connecting to existing data base
 					try {
 						ResultSet rsTableNames = conn.getMetaData().getTables(null, null, null, null); //Getting all tables from data base
 						ArrayList<String> tables = new ArrayList<String>(); //Creating ArrayList for table names
@@ -343,6 +346,12 @@ public class MainFrame extends JFrame {
 		configElementsPanel.setLayout(new MigLayout("", "[grow]25[grow]25[grow]25[grow]25[grow]", "[grow]8[grow]"));
 		
 		tfSearch = new JTextField();
+		tfSearch.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent evt) {
+				tfSearch.selectAll();
+			}
+		});
 		tfSearch.setText("Bitte Namen eingeben");
 		configElementsPanel.add(tfSearch, "cell 0 0,growx");
 		tfSearch.setColumns(10);
@@ -368,6 +377,11 @@ public class MainFrame extends JFrame {
 		configElementsPanel.add(lblExtern, "cell 4 0");
 		
 		btnStartSearch = new JButton("Suche Starten");
+		btnStartSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				loadFilter(DBConnection.getName());
+			}
+		});
 		configElementsPanel.add(btnStartSearch, "cell 0 1,aligny top");
 		
 		btnIfwt = new JButton("Ifwt");
@@ -620,4 +634,8 @@ public class MainFrame extends JFrame {
 
 	}
 	
+	//Getter and Setter
+	public static JTextField getSearchTF() {
+		return tfSearch;
+	}
 }
