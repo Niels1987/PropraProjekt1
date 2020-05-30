@@ -1,12 +1,11 @@
 package gui;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,12 +26,12 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-
 import database.DBConnection;
 import net.miginfocom.swing.MigLayout;
 
 public class MainFrame extends JFrame {
 	
+	private static final long serialVersionUID = 1L;
 	private Color frameColor = new Color(32, 32, 32);
 	private Color backgroundColor = new Color(25, 25, 25);
 	private Color foregroundColor = new Color(255, 255, 255);
@@ -74,6 +73,7 @@ public class MainFrame extends JFrame {
 	private JScrollPane spGefahrstoffe;
 	private JTextArea taGefahrstoffe;
 	private static DefaultTableCellRenderer cellRenderer;
+	private static DefaultTableCellRenderer cellRendererColor;
 	
 	private static Connection conn = null;
 	public static DefaultTableModel dtm;
@@ -298,7 +298,6 @@ public class MainFrame extends JFrame {
 		getData();
 		
 		
-		
 		// Building the panel for the informations that will be displayed
 		infoPanel = new JPanel();
 		infoPanel.setBackground(backgroundColor);
@@ -371,6 +370,9 @@ public class MainFrame extends JFrame {
 
 		dtm = new DefaultTableModel(new String[][] {}, new String[] { "ID", "Name", "Vorname", "Datum", "Ifwt", "MNaF",
 				"Intern", "Beschaeftigungsverhaeltnis", "Beginn", "Ende", "Extern", "E-Mail Adresse" }) {
+
+					private static final long serialVersionUID = 2116600817578147274L;
+
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
@@ -426,10 +428,15 @@ public class MainFrame extends JFrame {
 			table.getColumnModel().getColumn(11).setPreferredWidth(200);
 
 			table.setRowHeight(20);
+			
+			cellRendererColor = new ColorTable();
+			
+			//table.setDefaultRenderer(Object.class,  cellRendererColor);
 
 			cellRenderer = new DefaultTableCellRenderer();
 			cellRenderer.setHorizontalAlignment(JLabel.CENTER);
-			table.getColumnModel().getColumn(3).setCellRenderer(cellRenderer);
+			cellRendererColor.setHorizontalAlignment(JLabel.CENTER);
+			table.getColumnModel().getColumn(3).setCellRenderer(cellRendererColor);
 			table.getColumnModel().getColumn(4).setCellRenderer(cellRenderer);
 			table.getColumnModel().getColumn(5).setCellRenderer(cellRenderer);
 			table.getColumnModel().getColumn(6).setCellRenderer(cellRenderer);
@@ -452,9 +459,7 @@ public class MainFrame extends JFrame {
 
 			table2.setRowHeight(20);
 
-			cellRenderer = new DefaultTableCellRenderer();
-			cellRenderer.setHorizontalAlignment(JLabel.CENTER);
-			table2.getColumnModel().getColumn(3).setCellRenderer(cellRenderer);
+			table2.getColumnModel().getColumn(3).setCellRenderer(cellRendererColor);
 			table2.getColumnModel().getColumn(4).setCellRenderer(cellRenderer);
 			table2.getColumnModel().getColumn(5).setCellRenderer(cellRenderer);
 			table2.getColumnModel().getColumn(6).setCellRenderer(cellRenderer);
@@ -472,4 +477,42 @@ public class MainFrame extends JFrame {
 
 	}
 	
+}
+
+
+
+
+// class to paint cells in jtable depending on instruction expiry date
+class ColorTable extends DefaultTableCellRenderer {
+
+	private static final long serialVersionUID = 1L;
+	String date = null;
+	int daysDiff = 0;
+ 
+    public Component getTableCellRendererComponent(JTable table, java.lang.Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+ 
+        super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        	
+    		date = (String) table.getModel().getValueAt(row, 3);
+    		if (!date.isEmpty()) {
+    			System.out.println(row);
+    			System.out.println(date);
+    			daysDiff = CalcDateDiff.date(date);		// check difference between given date and actual date in CalcDateDiff-Class
+    			System.out.println(daysDiff);
+    			if (daysDiff > 168 && daysDiff < 182) {		// paint yellow if instruction is outdated in less than 2 weeks
+    				setBackground(Color.yellow);
+    			}
+    			else if (daysDiff > 182) {			// paint red if instruction is outdated
+    				setBackground(Color.red);
+    			}
+    			else {
+    				setBackground(Color.green);		// paint green if instruction is up-to-date
+    			}
+    		}
+    		else {
+    			setBackground(Color.white);			// paint white if no expiry date is given
+    		}
+            
+        return this;
+    }
 }

@@ -3,15 +3,12 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,16 +20,16 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
 
 import database.DBConnection;
 import net.miginfocom.swing.MigLayout;
 
 public class DataEditor extends JFrame{
 	
+
+	private static final long serialVersionUID = 1L;
+
 	private static DataEditor dataEditor = new DataEditor();
 	
 	private Color frameColor = new Color(32, 32, 32);
@@ -48,12 +45,8 @@ public class DataEditor extends JFrame{
 	private JButton btnAdd;
 	private JButton btnDelete;
 	private static JScrollPane spTable;
-	private JTable table;
-	private JButton btnSave;
-	private static DefaultTableCellRenderer cellRenderer;
 	
 	private static JTextField textField;
-	private static JTextField textField_1;
 	private static JTextField textField_2;
 	private static JTextField textField_3;
 	private static JTextField textField_4;
@@ -66,9 +59,7 @@ public class DataEditor extends JFrame{
 	private static JTextField textField_11;
 	private static int ID = 0;
 	
-	private static DefaultTableModel dtm;
 	private static Connection con = null;
-	private static JTable sqlTabel;
 	static PreparedStatement pstmt = null;
 	
 	
@@ -267,7 +258,6 @@ public class DataEditor extends JFrame{
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int i = MainFrame.table2.getSelectedRow();
-				String test = (String) MainFrame.table2.getValueAt(i, 10);
 				ID = Integer.parseInt((String) MainFrame.table2.getValueAt(i, 0));
 				System.out.println(ID);
 
@@ -281,13 +271,8 @@ public class DataEditor extends JFrame{
 	}
 	
 	
-	private static void addRow() {
-		
-	}
-	
-	
-	
 	// method to add new data into database
+	@SuppressWarnings("unused")
 	private void newData() {									// used in Actionlistener of JButton btnAdd "Neuer Eintrag"
 
 		JTextField Name = new JTextField();
@@ -554,11 +539,6 @@ public class DataEditor extends JFrame{
 				External.setText("");
 				System.out.println(e);
 			}
-
-			/*if (pane.getValue() == null) {
-				g++;
-			}*/
-			// if(pane.getValue() != null);
 			
 			} // End: first Else
 			
@@ -635,6 +615,7 @@ public class DataEditor extends JFrame{
 	
 	
 	// method to save edited data
+	@SuppressWarnings("unused")
 	public static void saveData() {						// used in ActionListener of JButton btnSave "Änderungen Speichern"
 		String nameVar;
 		String pnameVar;
