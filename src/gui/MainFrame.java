@@ -32,16 +32,20 @@ import javax.swing.event.MenuListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 import database.DBConnection;
 import net.miginfocom.swing.MigLayout;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class MainFrame extends JFrame {
 	
 	private Color frameColor = new Color(32, 32, 32);
 	private Color backgroundColor = new Color(25, 25, 25);
+	private Color redColor = new Color(255, 0, 0);
 	private Color foregroundColor = new Color(255, 255, 255);
 
 	private JPanel contentPane;
@@ -246,9 +250,12 @@ public class MainFrame extends JFrame {
 							String ende = rs.getString("Ende");
 							String extern = rs.getString("Extern");
 							String email = rs.getString("E-Mail Adresse");
+							String unterw = rs.getString("Allgemeine Unterweisung");
+							String labeinr = rs.getString("Laboreinrichtungen");
+							String gefahrst = rs.getString("Gefahrstoffe");
 
 							dtm.addRow(new String[] { id, name, vorname, datum, ifwt, manf, intern, beschverh, beginn, ende, extern,
-										email });
+										email,unterw,labeinr,gefahrst });
 						}
 						dtm.fireTableDataChanged();
 					} catch (SQLException e) {
@@ -463,6 +470,19 @@ public class MainFrame extends JFrame {
 		
 		getData();
 		
+		// Fill JTextAreas (Allgemeine Unterweisung, Laboreinrichtungen, Gefahrstoffe)  with data from selected row
+		table.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				int i = table.getSelectedRow();
+				String fillInstr = (String) table.getModel().getValueAt(i, 12);
+				String fillLab =  (String) table.getModel().getValueAt(i, 13);
+				String fillHazard =  (String) table.getModel().getValueAt(i, 14);
+				taAllgemeineUnterweisung.setText(fillInstr);
+				taLaboreinrichtungen.setText(fillLab);
+				taGefahrstoffe.setText(fillHazard);
+			}
+		});
+		
 		// Building the panel for the informations that will be displayed
 		infoPanel = new JPanel();
 		infoPanel.setBackground(backgroundColor);
@@ -476,10 +496,15 @@ public class MainFrame extends JFrame {
 		lblAllgemeineUnterweisung.setForeground(foregroundColor);
 		infoPanel.add(lblAllgemeineUnterweisung, "cell 0 0");
 		
-		spAllgemeineUnterweisungen = new JScrollPane();
-		infoPanel.add(spAllgemeineUnterweisungen, "cell 0 1,grow");
+		spAllgemeineUnterweisungen = new JScrollPane(
+	            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+	            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		infoPanel.add(spAllgemeineUnterweisungen, "width 25%, cell 0 1,grow");
 		
 		taAllgemeineUnterweisung = new JTextArea();
+		taAllgemeineUnterweisung.setLineWrap(true);
+		taAllgemeineUnterweisung.setWrapStyleWord(true);
+		//taAllgemeineUnterweisung.setBackground(redColor);
 		spAllgemeineUnterweisungen.setViewportView(taAllgemeineUnterweisung);
 		
 		// Building the (Laboreinrichtungen) informationen text area with title
@@ -488,8 +513,10 @@ public class MainFrame extends JFrame {
 		lblLaboreinrichtungen.setForeground(foregroundColor);
 		infoPanel.add(lblLaboreinrichtungen, "cell 1 0");
 		
-		spLaboreinrichtungen = new JScrollPane();
-		infoPanel.add(spLaboreinrichtungen, "cell 1 1,grow");
+		spLaboreinrichtungen = new JScrollPane(
+	            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+	            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		infoPanel.add(spLaboreinrichtungen, "width 25%, cell 1 1,grow");
 		
 		taLaboreinrichtungen = new JTextArea();
 		spLaboreinrichtungen.setViewportView(taLaboreinrichtungen);
@@ -500,8 +527,10 @@ public class MainFrame extends JFrame {
 		lblGefahrstoffe.setForeground(foregroundColor);
 		infoPanel.add(lblGefahrstoffe, "cell 2 0");
 		
-		spGefahrstoffe = new JScrollPane();
-		infoPanel.add(spGefahrstoffe, "cell 2 1,grow");
+		spGefahrstoffe = new JScrollPane(
+	            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+	            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		infoPanel.add(spGefahrstoffe, "width 25%, cell 2 1,grow");
 		
 		taGefahrstoffe = new JTextArea();
 		spGefahrstoffe.setViewportView(taGefahrstoffe);
@@ -521,7 +550,10 @@ public class MainFrame extends JFrame {
 									 filteredTable[i][8],
 									 filteredTable[i][9],
 									 filteredTable[i][10],
-									 filteredTable[i][11]});
+									 filteredTable[i][11],
+									 filteredTable[i][12],
+									 filteredTable[i][13],
+									 filteredTable[i][14]});
 		}
 	}
 	
@@ -534,7 +566,7 @@ public class MainFrame extends JFrame {
 	public static void getData() {
 
 		dtm = new DefaultTableModel(new String[][] {}, new String[] { "ID", "Name", "Vorname", "Datum", "Ifwt", "MNaF",
-				"Intern", "Beschaeftigungsverhaeltnis", "Beginn", "Ende", "Extern", "E-Mail Adresse" }) {
+				"Intern", "Beschaeftigungsverhaeltnis", "Beginn", "Ende", "Extern", "E-Mail Adresse", "Allgemeine Unterweisung", "Laboreinrichtungen", "Gefahrstoffe" }) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
@@ -569,9 +601,12 @@ public class MainFrame extends JFrame {
 				String ende = resultSet.getString("Ende");
 				String extern = resultSet.getString("Extern");
 				String email = resultSet.getString("E-Mail Adresse");
+				String unterw = resultSet.getString("Allgemeine Unterweisung");
+				String labeinr = resultSet.getString("Laboreinrichtungen");
+				String gefahrst = resultSet.getString("Gefahrstoffe");
 
 				dtm.addRow(new String[] { id, name, vorname, datum, ifwt, manf, intern, beschverh, beginn, ende, extern,
-						email });
+						email,unterw,labeinr,gefahrst });
 			}
 			dtm.fireTableDataChanged();
 			
@@ -588,6 +623,17 @@ public class MainFrame extends JFrame {
 			table.getColumnModel().getColumn(9).setPreferredWidth(30);
 			table.getColumnModel().getColumn(10).setPreferredWidth(28);
 			table.getColumnModel().getColumn(11).setPreferredWidth(200);
+			//table.getColumnModel().getColumn(12).setMinWidth(0);
+			//table.getColumnModel().getColumn(12).setMaxWidth(0);
+			//table.getColumnModel().getColumn(13).setMinWidth(0);
+			//table.getColumnModel().getColumn(13).setMaxWidth(0);
+			//table.getColumnModel().getColumn(14).setMinWidth(0);
+			//table.getColumnModel().getColumn(14).setMaxWidth(0);
+			//TableColumnModel tcm = table.getColumnModel();
+			//tcm.removeColumn(tcm.getColumn(12));
+			table.getColumnModel().removeColumn(table.getColumnModel().getColumn(12));		// make column invisible but still accessible
+			table.getColumnModel().removeColumn(table.getColumnModel().getColumn(12));		// make column invisible but still accessible
+			table.getColumnModel().removeColumn(table.getColumnModel().getColumn(12));		// make column invisible but still accessible
 
 			table.setRowHeight(20);
 			
@@ -628,6 +674,11 @@ public class MainFrame extends JFrame {
 			table2.getColumnModel().getColumn(8).setCellRenderer(cellRenderer);
 			table2.getColumnModel().getColumn(9).setCellRenderer(cellRenderer);
 			table2.getColumnModel().getColumn(10).setCellRenderer(cellRenderer);
+			
+
+			table2.getColumnModel().removeColumn(table2.getColumnModel().getColumn(12));		// make column invisible but still accessible
+			table2.getColumnModel().removeColumn(table2.getColumnModel().getColumn(12));		// make column invisible but still accessible
+			table2.getColumnModel().removeColumn(table2.getColumnModel().getColumn(12));		// make column invisible but still accessible
 
 			
 			pst.close();

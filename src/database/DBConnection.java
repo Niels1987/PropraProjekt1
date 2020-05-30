@@ -66,6 +66,9 @@ public class DBConnection {
 				filteredTable[i][9] = rs.getString("Ende");
 				filteredTable[i][10] = rs.getString("Extern");
 				filteredTable[i][11] = rs.getString("E-Mail Adresse");
+				filteredTable[i][12] = rs.getString("Allgemeine Unterweisung");
+				filteredTable[i][13] = rs.getString("Laboreinrichtungen");
+				filteredTable[i][14] = rs.getString("Gefahrstoffe");
 				
 				i++;
 			}
@@ -101,6 +104,9 @@ public class DBConnection {
 				filteredTable[i][9] = rs.getString("Ende");
 				filteredTable[i][10] = rs.getString("Extern");
 				filteredTable[i][11] = rs.getString("E-Mail Adresse");
+				filteredTable[i][12] = rs.getString("Allgemeine Unterweisung");
+				filteredTable[i][13] = rs.getString("Laboreinrichtungen");
+				filteredTable[i][14] = rs.getString("Gefahrstoffe");
 				
 				i++;
 			}
@@ -137,6 +143,9 @@ public class DBConnection {
 				filteredTable[i][9] = rs.getString("Ende");
 				filteredTable[i][10] = rs.getString("Extern");
 				filteredTable[i][11] = rs.getString("E-Mail Adresse");
+				filteredTable[i][12] = rs.getString("Allgemeine Unterweisung");
+				filteredTable[i][13] = rs.getString("Laboreinrichtungen");
+				filteredTable[i][14] = rs.getString("Gefahrstoffe");
 				
 				i++;
 			}
@@ -173,6 +182,9 @@ public class DBConnection {
 				filteredTable[i][9] = rs.getString("Ende");
 				filteredTable[i][10] = rs.getString("Extern");
 				filteredTable[i][11] = rs.getString("E-Mail Adresse");
+				filteredTable[i][12] = rs.getString("Allgemeine Unterweisung");
+				filteredTable[i][13] = rs.getString("Laboreinrichtungen");
+				filteredTable[i][14] = rs.getString("Gefahrstoffe");
 				
 				i++;
 			}
@@ -209,6 +221,9 @@ public class DBConnection {
 				filteredTable[i][9] = rs.getString("Ende");
 				filteredTable[i][10] = rs.getString("Extern");
 				filteredTable[i][11] = rs.getString("E-Mail Adresse");
+				filteredTable[i][12] = rs.getString("Allgemeine Unterweisung");
+				filteredTable[i][13] = rs.getString("Laboreinrichtungen");
+				filteredTable[i][14] = rs.getString("Gefahrstoffe");
 				
 				i++;
 			}
@@ -245,6 +260,9 @@ public class DBConnection {
 				filteredTable[i][9] = rs.getString("Ende");
 				filteredTable[i][10] = rs.getString("Extern");
 				filteredTable[i][11] = rs.getString("E-Mail Adresse");
+				filteredTable[i][12] = rs.getString("Allgemeine Unterweisung");
+				filteredTable[i][13] = rs.getString("Laboreinrichtungen");
+				filteredTable[i][14] = rs.getString("Gefahrstoffe");
 				
 				i++;
 			}
@@ -281,6 +299,9 @@ public class DBConnection {
 				filteredTable[i][9] = rs.getString("Ende");
 				filteredTable[i][10] = rs.getString("Extern");
 				filteredTable[i][11] = rs.getString("E-Mail Adresse");
+				filteredTable[i][12] = rs.getString("Allgemeine Unterweisung");
+				filteredTable[i][13] = rs.getString("Laboreinrichtungen");
+				filteredTable[i][14] = rs.getString("Gefahrstoffe");
 				
 				i++;
 			}
@@ -317,6 +338,9 @@ public class DBConnection {
 				filteredTable[i][9] = rs.getString("Ende");
 				filteredTable[i][10] = rs.getString("Extern");
 				filteredTable[i][11] = rs.getString("E-Mail Adresse");
+				filteredTable[i][12] = rs.getString("Allgemeine Unterweisung");
+				filteredTable[i][13] = rs.getString("Laboreinrichtungen");
+				filteredTable[i][14] = rs.getString("Gefahrstoffe");
 				
 				i++;
 			}
@@ -353,6 +377,9 @@ public class DBConnection {
 					filteredTable[i][9] = rs.getString("Ende");
 					filteredTable[i][10] = rs.getString("Extern");
 					filteredTable[i][11] = rs.getString("E-Mail Adresse");
+					filteredTable[i][12] = rs.getString("Allgemeine Unterweisung");
+					filteredTable[i][13] = rs.getString("Laboreinrichtungen");
+					filteredTable[i][14] = rs.getString("Gefahrstoffe");
 					
 					i++;
 				}
