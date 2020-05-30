@@ -662,10 +662,10 @@ class ColorTable extends DefaultTableCellRenderer {
      	
  		date = (String) table.getModel().getValueAt(row, 3);
  		if (!date.isEmpty()) {
- 			System.out.println(row);
- 			System.out.println(date);
+ 			//System.out.println(row);
+ 			//System.out.println(date);
  			daysDiff = CalcDateDiff.date(date);		// check difference between given date and actual date in CalcDateDiff-Class
- 			System.out.println(daysDiff);
+ 			//System.out.println(daysDiff);
  			if (daysDiff > 168 && daysDiff < 182) {		// paint yellow if instruction is outdated in less than 2 weeks
  				setBackground(Color.yellow);
  			}
