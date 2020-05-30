@@ -7,7 +7,6 @@ import java.awt.FlowLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 
 import admin.AccessData;
 import net.miginfocom.swing.MigLayout;
@@ -20,6 +19,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class Login extends JDialog {
+
+	private static final long serialVersionUID = 1L;
 
 	private static Login login = new Login();
 	
@@ -80,6 +81,7 @@ public class Login extends JDialog {
 		
 		btnLogin = new JButton("Anmelden");
 		btnLogin.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent evt) {
 				if (AccessData.chekUsrname(tfBenutzername.getText()) && AccessData.checkPassword(pfPasswort.getText())) {
 					DataEditor dataEditor =DataEditor.getInstance();

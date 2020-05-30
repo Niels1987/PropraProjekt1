@@ -32,7 +32,6 @@ import javax.swing.event.MenuListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
 
 import database.DBConnection;
 import net.miginfocom.swing.MigLayout;
@@ -43,9 +42,10 @@ import java.awt.event.MouseEvent;
 
 public class MainFrame extends JFrame {
 	
+	private static final long serialVersionUID = 1L;
 	private Color frameColor = new Color(32, 32, 32);
 	private Color backgroundColor = new Color(25, 25, 25);
-	private Color redColor = new Color(255, 0, 0);
+	//private Color redColor = new Color(255, 0, 0);
 	private Color foregroundColor = new Color(255, 255, 255);
 
 	private JPanel contentPane;
@@ -90,6 +90,7 @@ public class MainFrame extends JFrame {
 	private JTextArea taGefahrstoffe;
 	private static DefaultTableCellRenderer cellRenderer;
 	private static DefaultTableCellRenderer cellRendererColor;
+	private static Login login;
 	
 	private static Connection conn = null;
 	public static DefaultTableModel dtm;
@@ -110,6 +111,8 @@ public class MainFrame extends JFrame {
 			}
 		});
 	}
+	
+	
 
 	/**
 	 * Create the frame.
@@ -258,6 +261,8 @@ public class MainFrame extends JFrame {
 										email,unterw,labeinr,gefahrst });
 						}
 						dtm.fireTableDataChanged();
+						conn.close();
+						getTable.close();
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
@@ -305,8 +310,8 @@ public class MainFrame extends JFrame {
 		editMenu.addMenuListener(new MenuListener() {
 	        @Override
 	        public void menuSelected(MenuEvent e) {
-	        	Login login = Login.getInstance();
-	        	login.setVisible(true);
+	        	login = Login.getInstance();
+	        	loginToFront();
 	        }
 
 	        @Override
@@ -567,6 +572,8 @@ public class MainFrame extends JFrame {
 
 		dtm = new DefaultTableModel(new String[][] {}, new String[] { "ID", "Name", "Vorname", "Datum", "Ifwt", "MNaF",
 				"Intern", "Beschaeftigungsverhaeltnis", "Beginn", "Ende", "Extern", "E-Mail Adresse", "Allgemeine Unterweisung", "Laboreinrichtungen", "Gefahrstoffe" }) {
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
@@ -690,10 +697,26 @@ public class MainFrame extends JFrame {
 
 	}
 	
+	
+	//method to put login Window in front and grants focus to it
+	public void loginToFront() {
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				login.toFront();
+				login.repaint();
+				login.setLocation(600, 400);
+			}
+		});
+	}
+	
+	
+	
 	//Getter and Setter
 	public static JTextField getSearchTF() {
 		return tfSearch;
 	}
+	
 }
 
 

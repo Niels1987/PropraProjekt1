@@ -121,7 +121,7 @@ public class DataEditor extends JFrame{
 				newData();
 			}
 		});
-		elementPanel.add(btnAdd, "cell 1 1");
+		elementPanel.add(btnAdd, "gapleft 10, cell 1 1");
 		
 		// delete data button
 		btnDelete = new JButton("Eintrag löschen");
@@ -132,7 +132,7 @@ public class DataEditor extends JFrame{
 				deleteData();
 			}
 		});
-		elementPanel.add(btnDelete, "gapleft 50, cell 2 1");
+		elementPanel.add(btnDelete, "gapleft 30, cell 2 1");
 		
 		// Panel for the table that resembles the database
 		tablePanel = new JPanel();
