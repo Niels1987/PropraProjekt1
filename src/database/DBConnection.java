@@ -9,10 +9,13 @@ import java.sql.Statement;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
+import gui.MainFrame;
+
 
 public class DBConnection {
 	
 	private static String url = "jdbc:sqlite:database/Personen.db";
+	private static String tableName = "Personen";
 	private static Connection con;
 	
 	public static Connection connect() {
@@ -26,6 +29,54 @@ public class DBConnection {
     	   System.out.println(e.getMessage());
     	   return null;
        }
+	}
+	/*
+	public static Connection connect(String filePath) {
+		try {
+			Class.forName("org.sqlite.JDBC");
+			con = DriverManager.getConnection("jdbc:sqlite:" + filePath);
+			return con;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}*/
+	
+	public static String[][] getName() {
+		try {
+			con = DriverManager.getConnection(url);
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT COUNT (ID) FROM "+tableName+" WHERE Name='"+MainFrame.getSearchTF().getText()+"';");
+			int rowCount = rs.getInt(1);
+			rs = stmt.executeQuery("SELECT * FROM "+tableName+" WHERE Name ='"+MainFrame.getSearchTF().getText()+"';");
+			int columnCount = rs.getMetaData().getColumnCount();
+			String[][] filteredTable = new String[rowCount][columnCount];
+			int i = 0;
+			
+			while (rs.next()) {
+				filteredTable[i][0] = rs.getString("ID");
+				filteredTable[i][1] = rs.getString("Name");
+				filteredTable[i][2] = rs.getString("Vorname");
+				filteredTable[i][3] = rs.getString("Datum");
+				filteredTable[i][4] = rs.getString("Ifwt");
+				filteredTable[i][5] = rs.getString("MNaF");
+				filteredTable[i][6] = rs.getString("Intern");
+				filteredTable[i][7] = rs.getString("Beschaeftigungsverhaeltnis");
+				filteredTable[i][8] = rs.getString("Beginn");
+				filteredTable[i][9] = rs.getString("Ende");
+				filteredTable[i][10] = rs.getString("Extern");
+				filteredTable[i][11] = rs.getString("E-Mail Adresse");
+				filteredTable[i][12] = rs.getString("Allgemeine Unterweisung");
+				filteredTable[i][13] = rs.getString("Laboreinrichtungen");
+				filteredTable[i][14] = rs.getString("Gefahrstoffe");
+				
+				i++;
+			}
+			return filteredTable;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	// Method that returns all rows of the table where Ifwt is not null
@@ -53,6 +104,9 @@ public class DBConnection {
 				filteredTable[i][9] = rs.getString("Ende");
 				filteredTable[i][10] = rs.getString("Extern");
 				filteredTable[i][11] = rs.getString("E-Mail Adresse");
+				filteredTable[i][12] = rs.getString("Allgemeine Unterweisung");
+				filteredTable[i][13] = rs.getString("Laboreinrichtungen");
+				filteredTable[i][14] = rs.getString("Gefahrstoffe");
 				
 				i++;
 			}
@@ -89,6 +143,9 @@ public class DBConnection {
 				filteredTable[i][9] = rs.getString("Ende");
 				filteredTable[i][10] = rs.getString("Extern");
 				filteredTable[i][11] = rs.getString("E-Mail Adresse");
+				filteredTable[i][12] = rs.getString("Allgemeine Unterweisung");
+				filteredTable[i][13] = rs.getString("Laboreinrichtungen");
+				filteredTable[i][14] = rs.getString("Gefahrstoffe");
 				
 				i++;
 			}
@@ -125,6 +182,9 @@ public class DBConnection {
 				filteredTable[i][9] = rs.getString("Ende");
 				filteredTable[i][10] = rs.getString("Extern");
 				filteredTable[i][11] = rs.getString("E-Mail Adresse");
+				filteredTable[i][12] = rs.getString("Allgemeine Unterweisung");
+				filteredTable[i][13] = rs.getString("Laboreinrichtungen");
+				filteredTable[i][14] = rs.getString("Gefahrstoffe");
 				
 				i++;
 			}
@@ -161,6 +221,9 @@ public class DBConnection {
 				filteredTable[i][9] = rs.getString("Ende");
 				filteredTable[i][10] = rs.getString("Extern");
 				filteredTable[i][11] = rs.getString("E-Mail Adresse");
+				filteredTable[i][12] = rs.getString("Allgemeine Unterweisung");
+				filteredTable[i][13] = rs.getString("Laboreinrichtungen");
+				filteredTable[i][14] = rs.getString("Gefahrstoffe");
 				
 				i++;
 			}
@@ -197,6 +260,9 @@ public class DBConnection {
 				filteredTable[i][9] = rs.getString("Ende");
 				filteredTable[i][10] = rs.getString("Extern");
 				filteredTable[i][11] = rs.getString("E-Mail Adresse");
+				filteredTable[i][12] = rs.getString("Allgemeine Unterweisung");
+				filteredTable[i][13] = rs.getString("Laboreinrichtungen");
+				filteredTable[i][14] = rs.getString("Gefahrstoffe");
 				
 				i++;
 			}
@@ -207,4 +273,138 @@ public class DBConnection {
 			return null;
 		}
 	}
+	
+	// Method that returns all MNaF that are not null !MUSS ICH NOCH UEBERARBEITEN! Dominik
+	public static String[][] getMNaF()  {
+		try {
+			con = DriverManager.getConnection(url);
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT COUNT (ID) FROM Personen WHERE NOT MNaF IS NULL");
+			int rowCount = rs.getInt(1);
+			rs = stmt.executeQuery("SELECT * FROM Personen WHERE NOT MNaF IS NULL");
+			int columnCount = rs.getMetaData().getColumnCount();
+			String[][] filteredTable = new String[rowCount][columnCount];
+			int i = 0;
+			
+			while (rs.next()) {
+				filteredTable[i][0] = rs.getString("ID");
+				filteredTable[i][1] = rs.getString("Name");
+				filteredTable[i][2] = rs.getString("Vorname");
+				filteredTable[i][3] = rs.getString("Datum");
+				filteredTable[i][4] = rs.getString("Ifwt");
+				filteredTable[i][5] = rs.getString("MNaF");
+				filteredTable[i][6] = rs.getString("Intern");
+				filteredTable[i][7] = rs.getString("Beschaeftigungsverhaeltnis");
+				filteredTable[i][8] = rs.getString("Beginn");
+				filteredTable[i][9] = rs.getString("Ende");
+				filteredTable[i][10] = rs.getString("Extern");
+				filteredTable[i][11] = rs.getString("E-Mail Adresse");
+				filteredTable[i][12] = rs.getString("Allgemeine Unterweisung");
+				filteredTable[i][13] = rs.getString("Laboreinrichtungen");
+				filteredTable[i][14] = rs.getString("Gefahrstoffe");
+				
+				i++;
+			}
+			return filteredTable;
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	//Method that returns all rows of the table where intern equals 'ja'
+	public static String[][] getIntern()  {
+		try {
+			con = DriverManager.getConnection(url);
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT COUNT (ID) FROM Personen WHERE Intern='Ja'");
+			int rowCount = rs.getInt(1);
+			rs = stmt.executeQuery("SELECT * FROM Personen WHERE Intern='Ja'");
+			int columnCount = rs.getMetaData().getColumnCount();
+			String[][] filteredTable = new String[rowCount][columnCount];
+			int i = 0;
+			
+			while (rs.next()) {
+				filteredTable[i][0] = rs.getString("ID");
+				filteredTable[i][1] = rs.getString("Name");
+				filteredTable[i][2] = rs.getString("Vorname");
+				filteredTable[i][3] = rs.getString("Datum");
+				filteredTable[i][4] = rs.getString("Ifwt");
+				filteredTable[i][5] = rs.getString("MNaF");
+				filteredTable[i][6] = rs.getString("Intern");
+				filteredTable[i][7] = rs.getString("Beschaeftigungsverhaeltnis");
+				filteredTable[i][8] = rs.getString("Beginn");
+				filteredTable[i][9] = rs.getString("Ende");
+				filteredTable[i][10] = rs.getString("Extern");
+				filteredTable[i][11] = rs.getString("E-Mail Adresse");
+				filteredTable[i][12] = rs.getString("Allgemeine Unterweisung");
+				filteredTable[i][13] = rs.getString("Laboreinrichtungen");
+				filteredTable[i][14] = rs.getString("Gefahrstoffe");
+				
+				i++;
+			}
+			return filteredTable;
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	//Method that returns all rows of the table where extern equals 'ja'
+		public static String[][] getExtern()  {
+			try {
+				con = DriverManager.getConnection(url);
+				Statement stmt = con.createStatement();
+				ResultSet rs = stmt.executeQuery("SELECT COUNT (ID) FROM Personen WHERE Extern='Ja'");
+				int rowCount = rs.getInt(1);
+				rs = stmt.executeQuery("SELECT * FROM Personen WHERE Extern='Ja'");
+				int columnCount = rs.getMetaData().getColumnCount();
+				String[][] filteredTable = new String[rowCount][columnCount];
+				int i = 0;
+				
+				while (rs.next()) {
+					filteredTable[i][0] = rs.getString("ID");
+					filteredTable[i][1] = rs.getString("Name");
+					filteredTable[i][2] = rs.getString("Vorname");
+					filteredTable[i][3] = rs.getString("Datum");
+					filteredTable[i][4] = rs.getString("Ifwt");
+					filteredTable[i][5] = rs.getString("MNaF");
+					filteredTable[i][6] = rs.getString("Intern");
+					filteredTable[i][7] = rs.getString("Beschaeftigungsverhaeltnis");
+					filteredTable[i][8] = rs.getString("Beginn");
+					filteredTable[i][9] = rs.getString("Ende");
+					filteredTable[i][10] = rs.getString("Extern");
+					filteredTable[i][11] = rs.getString("E-Mail Adresse");
+					filteredTable[i][12] = rs.getString("Allgemeine Unterweisung");
+					filteredTable[i][13] = rs.getString("Laboreinrichtungen");
+					filteredTable[i][14] = rs.getString("Gefahrstoffe");
+					
+					i++;
+				}
+				return filteredTable;
+				
+			} catch(SQLException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+		
+		//Getter and Setter
+		public static String getURL() {
+			return url;
+		}
+		
+		public static void setURL(String path) {
+			url = path;
+		}
+		
+		public static String getTableName() {
+			return tableName;
+		}
+		
+		public static void setTableName(String name) {
+			tableName = name;
+		}
 }
